@@ -1,0 +1,32 @@
+
+Input: nums = [4,2,5,3]
+Output: 7
+Explanation: It is optimal to choose the subsequence [4,2,5] with alternating sum (4 + 5) - 2 = 7.
+
+CODE:
+
+class Solution {
+public:
+    typedef long long ll;
+    int n;
+    ll solve(vector<int>&nums,int idx,bool flag,vector<vector<ll>>&dp){
+        if(idx>=n) return 0;
+        
+        if(dp[idx][flag]!=-1)return dp[idx][flag];
+        
+        ll skip=solve(nums,idx+1,flag,dp);
+        ll val=nums[idx]; 
+       if(flag==false){
+           val=-val;
+       }
+       ll take=solve(nums,idx+1,!flag,dp)+val;
+      return dp[idx][flag]=max(take,skip);
+        
+    }
+    long long maxAlternatingSum(vector<int>& nums) {
+        n=nums.size();
+        vector<vector<ll>>dp(100001,vector<ll>(2,-1));
+       return solve(nums,0,true,dp);
+        
+    }
+};
