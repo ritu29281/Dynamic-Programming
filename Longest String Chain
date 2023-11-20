@@ -1,0 +1,49 @@
+Input: words = ["a","b","ba","bca","bda","bdca"]
+Output: 4
+Explanation: One of the longest word chains is ["a","ba","bda","bdca"].
+
+CODE:
+
+class Solution {
+public:
+    int n;
+    int dp[1001][1001];
+   static bool mycomp(string &a,string &b){
+        return a.length()<b.length();
+    }
+    bool isPredecessor(string &word1,string &word2){
+        int N=word1.length();
+        int M=word2.length();
+        int i=0,j=0;
+        if(N>=M || (M-N)!=1) return false;
+        while(i<N && j<M){
+            if(word1[i]==word2[j]){
+                i++;
+            }
+            j++;
+        }
+        return i==N;
+    }
+    int solve(vector<string>& words,int prev ,int curr){
+        if(curr==n) return 0;
+        int take=0;
+        int not_take=0;
+        if(prev!=-1 && dp[prev][curr]!=-1){
+            return dp[prev][curr];
+        }
+        if(prev==-1 || isPredecessor(words[prev],words[curr])){
+            take=1+solve(words,curr,curr+1);
+        }
+        not_take=solve(words,prev,curr+1);
+        if(prev!=-1){
+            dp[prev][curr]= max(take,not_take);
+        }
+        return max(take,not_take);
+    }
+    int longestStrChain(vector<string>& words) {
+       n=words.size();
+       memset(dp,-1,sizeof(dp));
+        sort(words.begin(),words.end(),mycomp);
+       return solve(words,-1,0);
+    }
+};
