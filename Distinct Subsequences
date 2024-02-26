@@ -1,0 +1,35 @@
+Input: s = "rabbbit", t = "rabbit"
+Output: 3
+Explanation:
+As shown below, there are 3 ways you can generate "rabbit" from s.
+rabbbit
+rabbbit
+rabbbit
+
+class Solution {
+public:
+    int solve(string s,string t,int sidx, int tidx,int n,int m,vector<vector<int>>&dp){
+        if(tidx >= m){
+            return 1;
+        }
+        if(sidx >= n){
+            return 0;
+        }
+        if(dp[sidx][tidx]!=-1){
+            return dp[sidx][tidx];
+        }
+        int take=solve(s,t,sidx+1,tidx,n,m,dp);
+        int not_take=0;
+        if(s[sidx]==t[tidx]){
+          not_take=  solve(s,t,sidx+1,tidx+1,n,m,dp);
+        }
+        return dp[sidx][tidx]= take+not_take;
+    }
+    int numDistinct(string s, string t) {
+       
+     int n=s.length();
+     int m=t.length();
+         vector<vector<int>>dp(n,vector<int>(m,-1));
+      return solve(s,t,0,0,n,m,dp);
+    }
+};
